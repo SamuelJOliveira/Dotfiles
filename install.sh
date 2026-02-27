@@ -63,6 +63,18 @@ for pkg in "${PACKAGES[@]}"; do
   stow --restow "$pkg" && ok "$pkg" || warn "$pkg falhou — verifique manualmente"
 done
 
+# ── Recria symlinks dependentes do usuário ────────────────────────────────
+step "Recriando symlinks do Omarchy no nvim..."
+THEME_LINK="$HOME/.config/nvim/lua/plugins/theme.lua"
+THEME_TARGET="$HOME/.config/omarchy/current/theme/neovim.lua"
+
+if [ -f "$THEME_TARGET" ]; then
+  ln -sf "$THEME_TARGET" "$THEME_LINK"
+  ok "theme.lua recriado"
+else
+  warn "theme.lua: alvo não encontrado em $THEME_TARGET, aplique um tema pelo menu do Omarchy"
+fi
+
 # ── 5. Recarrega em runtime ────────────────────────────────────────────────
 step "Recarregando configurações em runtime..."
 

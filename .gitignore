@@ -6,3 +6,4 @@ zen/.config/zen/**/*.sqlite-shm
 zen/.config/zen/**/*.sqlite-wal
 zen/
 nvim/.config/nvim/lua/plugins/theme.lua
+nvim/.config/nvim/lua/plugins/theme.lua
