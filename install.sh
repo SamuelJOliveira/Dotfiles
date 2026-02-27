@@ -24,7 +24,7 @@ ok "Stow disponível"
 
 declare -A TARGETS=(
   [ghostty]="$HOME/.config/ghostty"
-  [hypr]="$HOME/.config/hypr/input.conf $HOME/.config/hypr/monitors.conf $HOME/.config/hypr/looknfeel"
+  [hypr]="$HOME/.config/hypr/hyprland.conf $HOME/.config/hypr/input.conf $HOME/.config/hypr/monitors.conf $HOME/.config/hypr/looknfeel"
   [nvim]="$HOME/.config/nvim"
   [tmux]="$HOME/.config/tmux $HOME/.tmux.conf"
   [waybar]="$HOME/.config/waybar/config.jsonc $HOME/.config/waybar/style.css"
