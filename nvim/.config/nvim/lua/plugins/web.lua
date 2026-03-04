@@ -12,9 +12,21 @@ return {
   },
 
   {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, { "html", "css" })
+    end,
+  },
+
+  {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        html = {
+          on_attach = function(client)
+            client.server_capabilities.semanticTokensProvider = nil
+          end,
+        },
         emmet_ls = {
           filetypes = {
             "html", "typescriptreact", "javascriptreact",
