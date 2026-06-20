@@ -1,0 +1,269 @@
+# ===========================================================f
+#  sway config — sam@archlenovo
+# ============================================================
+font Inter 11
+
+# ────────────────────────────────────────────────────────────
+#  variáveis
+#────────────────────────────────────────────────────────────
+
+set $mod     mod4
+set $left    h
+set $down    j
+set $up      k
+set $right   l
+set $term    kitty
+set $menu    wmenu-run
+set $browser firefox
+
+
+# ────────────────────────────────────────────────────────────
+#  aparência
+# ────────────────────────────────────────────────────────────
+
+default_border pixel 2
+client.focused          #d3d3d9 #285577 #FFFFFF #d3d3d9 #d3d3d9
+
+
+blur enable
+blur_passes 2
+blur_radius 5
+corner_radius 10
+
+
+# ────────────────────────────────────────────────────────────
+#  output
+# ────────────────────────────────────────────────────────────
+set $laptop  eDP-1
+set $monitor HDMI-A-1
+
+output $monitor mode 1920x1080@100Hz
+output $monitor adaptive_sync on
+output $monitor subpixel rgb
+output $monitor scale_filter linear
+output $monitor allow_tearing yes
+output $monitor max_render_time 1
+output $monitor bg ~/.config/wallpapers/mono-2.jpg fill
+
+output $laptop subpixel rgb
+output $laptop scale_filter linear
+output $laptop allow_tearing yes
+output $laptop max_render_time off
+output $laptop  bg ~/.config/wallpapers/mono-2.jpg fill
+
+workspace 1  output $monitor
+workspace 2  output $monitor
+workspace 3  output $monitor
+workspace 4  output $monitor
+workspace 5  output $laptop
+workspace 6  output $monitor
+workspace 7  output $monitor
+workspace 8  output $monitor
+workspace 9  output $monitor
+workspace 10 output $monitor
+
+# ────────────────────────────────────────────────────────────
+#  Input
+# ────────────────────────────────────────────────────────────
+
+input * {
+    xkb_layout  "us,br"
+    xkb_options ctrl:nocaps,grp:alts_toggle
+    repeat_delay 300
+    repeat_rate  50
+}
+
+input type:touchpad {
+    dwt              enabled
+    tap              enabled
+    natural_scroll   enabled
+    middle_emulation enabled
+}
+
+
+# ────────────────────────────────────────────────────────────
+#  Idle / Lock
+# ────────────────────────────────────────────────────────────
+
+exec swayidle -w \
+    timeout 300  'swaylock -f -c 000000' \
+    timeout 600  'swaymsg "output * power off"' \
+    resume       'swaymsg "output * power on"' \
+    before-sleep 'swaylock -f -c 000000'
+
+
+# ────────────────────────────────────────────────────────────
+#  Autostart
+# ────────────────────────────────────────────────────────────
+
+exec mako
+exec waybar
+
+
+# ────────────────────────────────────────────────────────────
+#  Atalhos — Basics
+# ────────────────────────────────────────────────────────────
+
+bindsym $mod+Return    exec $term
+bindsym $mod+w         kill
+bindsym $mod+d         exec wofi --show drun
+bindsym $mod+Shift+b   exec $browser
+bindsym $mod+Shift+c   reload
+bindsym $mod+Shift+e   exec swaynag -t warning \
+    -m 'Deseja sair do Sway? Isso encerrará sua sessão Wayland.' \
+    -B 'Sim, sair' 'swaymsg exit'
+
+bindsym $mod+n exec makoctl dismiss
+bindsym $mod+Shift+n exec ~/.local/bin/note-open
+bindsym $mod+Ctrl+n  exec ~/.local/bin/note-new
+bindsym $mod+Shift+z exec grim -g "$(slurp)" /tmp/shot.png \
+    && wl-copy --type image/png < /tmp/shot.png
+bindsym $mod+Shift+w exec ~/.config/sway/scripts/wallpaper-cycle.sh
+
+# ────────────────────────────────────────────────────────────
+#  Display
+# ────────────────────────────────────────────────────────────
+
+bindsym $mod+m exec ~/.config/sway/scripts/mirror-toggle.sh
+bindsym $mod+p exec ~/.config/sway/scripts/aula-mode.sh
+
+floating_modifier $mod normal
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space       focus mode_toggle
+
+
+# ────────────────────────────────────────────────────────────
+#  Atalhos — Áudio e Brilho
+# ────────────────────────────────────────────────────────────
+
+bindsym XF86AudioRaiseVolume exec \
+    pactl set-sink-volume @DEFAULT_SINK@ +5% && \
+    notify-send -t 1500 -h string:x-canonical-private-synchronous:volume \
+    "Volume" "$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\d+%' | head -1)"
+
+bindsym XF86AudioLowerVolume exec \
+    pactl set-sink-volume @DEFAULT_SINK@ -5% && \
+    notify-send -t 1500 -h string:x-canonical-private-synchronous:volume \
+    "Volume" "$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\d+%' | head -1)"
+
+bindsym XF86AudioMute exec \
+    pactl set-sink-mute @DEFAULT_SINK@ toggle && \
+    notify-send -t 1500 -h string:x-canonical-private-synchronous:volume \
+    "Volume" "$(pactl get-sink-mute @DEFAULT_SINK@ | grep -oE 'yes|no' | sed 's/yes/Mutado/;s/no/Ativado/')"
+
+bindsym --locked XF86AudioMicMute     exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym --locked XF86MonBrightnessUp   exec brightnessctl set 5%+
+
+
+# ────────────────────────────────────────────────────────────
+#  Atalhos — Navegação de Foco
+# ────────────────────────────────────────────────────────────
+
+bindsym $mod+$left  focus left
+bindsym $mod+$down  focus down
+bindsym $mod+$up    focus up
+bindsym $mod+$right focus right
+
+bindsym $mod+Left  focus left
+bindsym $mod+Down  focus down
+bindsym $mod+Up    focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+a focus parent
+
+
+# ────────────────────────────────────────────────────────────
+#  Atalhos — Mover Janelas
+# ────────────────────────────────────────────────────────────
+
+bindsym $mod+Shift+$left  move left
+bindsym $mod+Shift+$down  move down
+bindsym $mod+Shift+$up    move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+Left  move left
+bindsym $mod+Shift+Down  move down
+bindsym $mod+Shift+Up    move up
+bindsym $mod+Shift+Right move right
+
+
+# ────────────────────────────────────────────────────────────
+#  Workspaces
+# ────────────────────────────────────────────────────────────
+
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+
+# ────────────────────────────────────────────────────────────
+#  Layout
+# ────────────────────────────────────────────────────────────
+
+bindsym $mod+b splith
+bindsym $mod+v splitv
+
+bindsym $mod+s layout stacking
+bindsym $mod+t layout tabbed
+bindsym $mod+e layout toggle split
+
+bindsym $mod+f fullscreen
+
+
+# ────────────────────────────────────────────────────────────
+#  Scratchpad
+# ────────────────────────────────────────────────────────────
+
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus       scratchpad show
+
+
+# ────────────────────────────────────────────────────────────
+#  Modo Resize
+# ────────────────────────────────────────────────────────────
+
+mode "resize" {
+    bindsym $left  resize shrink width  10px
+    bindsym $down  resize grow   height 10px
+    bindsym $up    resize shrink height 10px
+    bindsym $right resize grow   width  10px
+
+    bindsym Left  resize shrink width  10px
+    bindsym Down  resize grow   height 10px
+    bindsym Up    resize shrink height 10px
+    bindsym Right resize grow   width  10px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# ────────────────────────────────────────────────────────────
+#  pendrive
+# ────────────────────────────────────────────────────────────
+exec udiskie --automount --tray
+# ────────────────────────────────────────────────────────────
+#  Includes
+# ────────────────────────────────────────────────────────────
+
+include /etc/sway/config.d/*

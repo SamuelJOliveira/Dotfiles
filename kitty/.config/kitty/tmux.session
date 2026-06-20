@@ -1,0 +1,1 @@
+launch --cwd=current --type=os-window bash -c "tmux attach-session -t default || tmux new-session -s default"

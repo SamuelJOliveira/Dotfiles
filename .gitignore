@@ -1,9 +1,12 @@
-tmux/.config/tmux/plugins/
-zen/.config/zen/ryiqakf9.Default (release)/
-zen/.config/zen/x9lu6yt6.Default Profile/
-zen/.config/zen/**/*.sqlite
-zen/.config/zen/**/*.sqlite-shm
-zen/.config/zen/**/*.sqlite-wal
-zen/
-nvim/.config/nvim/lua/plugins/theme.lua
-nvim/.config/nvim/lua/plugins/theme.lua
+.claude/
+**/.claude/
+
+nvim/.config/nvim/plugin/
+
+sway/.config/sway/outputs
+sway/.config/sway/workspaces
+
+.DS_Store
+*.swp
+*.swo
+*~
